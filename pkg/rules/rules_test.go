@@ -129,6 +129,20 @@ func Test_addRoute(t *testing.T) {
 			},
 		},
 		{
+			desc: "Host and PathPrefix right negated Host",
+			rule: "!Host(`nope`) && PathPrefix(`/foo`)",
+			expected: map[string]int{
+				"http://localhost/foo": http.StatusOK,
+			},
+		},
+		{
+			desc: "Host and PathPrefix right negated PathPrefix",
+			rule: "Host(`localhost`) && !PathPrefix(`/bar`)",
+			expected: map[string]int{
+				"http://localhost/foo": http.StatusOK,
+			},
+		},
+		{
 			desc: "HostRegexp with capturing group",
 			rule: "HostRegexp(`{subdomain:(foo\\.)?bar\\.com}`)",
 			expected: map[string]int{

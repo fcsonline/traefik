@@ -178,6 +178,15 @@ func query(route *mux.Route, query ...string) error {
 
 func addRuleOnRouter(router *mux.Router, rule *tree) error {
 	switch rule.matcher {
+	case "not":
+    // TODO
+		route := router.NewRoute()
+		err := addRuleOnRoute(route, rule.ruleLeft)
+		if err != nil {
+			return err
+		}
+
+		return addRuleOnRoute(route, rule.ruleRight)
 	case "and":
 		route := router.NewRoute()
 		err := addRuleOnRoute(route, rule.ruleLeft)
@@ -205,6 +214,14 @@ func addRuleOnRouter(router *mux.Router, rule *tree) error {
 
 func addRuleOnRoute(route *mux.Route, rule *tree) error {
 	switch rule.matcher {
+	case "not":
+	  // TODO
+		err := addRuleOnRoute(route, rule.ruleLeft)
+		if err != nil {
+			return err
+		}
+
+		return addRuleOnRoute(route, rule.ruleRight)
 	case "and":
 		err := addRuleOnRoute(route, rule.ruleLeft)
 		if err != nil {

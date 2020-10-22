@@ -60,12 +60,24 @@ func lower(slice []string) []string {
 
 func parseDomain(tree *tree) []string {
 	switch tree.matcher {
+	case "not":
+		return parseDomain(tree.ruleLeft)
 	case "and", "or":
 		return append(parseDomain(tree.ruleLeft), parseDomain(tree.ruleRight)...)
 	case "Host", "HostSNI":
 		return tree.value
 	default:
 		return nil
+	}
+}
+
+func notFunc(left treeBuilder) treeBuilder {
+	return func() *tree {
+		return &tree{
+			matcher:   "not",
+			ruleLeft:  left(),
+			ruleRight: nil,
+		}
 	}
 }
 
@@ -110,6 +122,7 @@ func newParser() (predicate.Parser, error) {
 
 	return predicate.NewParser(predicate.Def{
 		Operators: predicate.Operators{
+			NOT: notFunc,
 			AND: andFunc,
 			OR:  orFunc,
 		},
