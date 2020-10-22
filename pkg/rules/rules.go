@@ -186,7 +186,7 @@ func addRuleOnRouter(router *mux.Router, rule *tree) error {
 			return err
 		}
 
-		return addRuleOnRoute(route, rule.ruleRight)
+		return nil
 	case "and":
 		route := router.NewRoute()
 		err := addRuleOnRoute(route, rule.ruleLeft)
@@ -221,7 +221,7 @@ func addRuleOnRoute(route *mux.Route, rule *tree) error {
 			return err
 		}
 
-		return addRuleOnRoute(route, rule.ruleRight)
+		return nil
 	case "and":
 		err := addRuleOnRoute(route, rule.ruleLeft)
 		if err != nil {
